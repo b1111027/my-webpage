@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix 節目分群與趨勢分析</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Netflix 節目分群與趨勢分析</h1>
+            <nav>
+                <ul>
+                    <li><a href="#project-intro">專案簡介</a></li>
+                    <li><a href="#project-overview">專案介紹</a></li>
+                    <li><a href="#data-description">數據描述</a></li>
+                    <li><a href="#model-training">模型選擇與訓練</a></li>
+                    <li><a href="#results">預測結果</a></li>
+                    <li><a href="#references">參考資料與附錄</a></li>
+                    <li><a href="#team">製作團隊</a></li>
+                    <li><a href="#project-team">專案團隊</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        <section id="project-intro">
+            <h2>專案簡介</h2>
+            <p>透過 Netflix 節目資料，探討節目如何依據年份與時長分群，並結合內容類型進行分析，進一步揭示全球影視趨勢。</p>
+        </section>
+        <section id="project-overview">
+            <h2>專案介紹</h2>
+            <h3>研究背景</h3>
+            <p>Netflix 是全球最大的串流影音平台之一，每年上架大量來自不同國家、類型與形式的影視內容。本研究旨在分析這些內容的分群與趨勢。</p>
+            <h3>研究問題</h3>
+            <ul>
+                <li>Netflix 上最常見的影片類型為何？</li>
+                <li>根據「上映年份」與「片長」是否能將影片自動分群？（K-means）</li>
+                <li>是否可以根據特徵預測該影片是電影還是影集？（分類模型）</li>
+            </ul>
+        </section>
+        <section id="data-description">
+            <h2>數據描述</h2>
+            <h3>數據集的來源</h3>
+            <p>數據來源於 <a href="https://www.kaggle.com/datasets/shivamb/netflix-shows" target="_blank">Kaggle</a>，包含 8807 筆影視資料和 12 個欄位。</p>
+            <h3>使用欄位</h3>
+            <ul>
+                <li><strong>release_year</strong>：上映年份</li>
+                <li><strong>duration</strong>：片長（需轉成數字）</li>
+                <li><strong>listed_in</strong>：內容類型</li>
+                <li><strong>type</strong>：電影/影集</li>
+            </ul>
+            <h3>特徵工程</h3>
+            <ul>
+                <li><strong>duration</strong> 欄位包含文字「min」或「Season」等單位，需先進行資料清洗並轉為分鐘數。</li>
+                <li>為了進行 K-means 分群，選用 <strong>release_year</strong> 與 <strong>duration_mins</strong> 兩個數值欄位作為特徵。</li>
+                <li>非數值資料如 <strong>type</strong> 與 <strong>listed_in</strong> 僅作為補充分析與視覺化。</li>
+            </ul>
+            <h3>數據處理（異常值或缺值）</h3>
+            <ul>
+                <li>處理 <strong>duration</strong> 欄位。</li>
+                <li>對 <strong>listed_in</strong> 做 One-Hot Encoding（供預測用）。</li>
+                <li>使用 StandardScaler 對特徵數值進行標準化處理，避免某欄位影響權重。</li>
+            </ul>
+        </section>
+        <section id="model-training">
+            <h2>模型選擇與訓練</h2>
+            <h3>採用之模型</h3>
+            <p>採用 K-means 分群演算法，將影片依據「上映年份」與「片長」分為三群，並分析每群的特徵分布。</p>
+            <h3>訓練集與測試集</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>比率</th>
+                        <th>測試筆數</th>
+                        <th>訓練筆數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1:9</td>
+                        <td>881</td>
+                        <td>7926</td>
+                    </tr>
+                    <tr>
+                        <td>2:8</td>
+                        <td>1761</td>
+                        <td>7046</td>
+                    </tr>
+                    <tr>
+                        <td>3:7</td>
+                        <td>2642</td>
+                        <td>6165</td>
+                    </tr>
+                    <tr>
+                        <td>4:6</td>
+                        <td>3523</td>
+                        <td>5284</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>模型評估與比較</h3>
+            <p>分類模型使用準確率（Accuracy）、精確率（Precision）與召回率（Recall）等指標進行評估。</p>
+        </section>
+        <section id="results">
+            <h2>預測結果</h2>
+            <ul>
+                <li>K-means 分群圖</li>
+                <li>影片類型分布長條圖</li>
+                <li>以比例 1:9 顯示的決策樹</li>
+            </ul>
+        </section>
+        <section id="references">
+            <h2>參考資料與附錄</h2>
+            <p>附錄一：<a href="https://www.kaggle.com/datasets/shivamb/netflix-shows" target="_blank">Netflix Shows Dataset</a></p>
+        </section>
+        <section id="team">
+            <h2>製作團隊</h2>
+            <ul>
+                <li><strong>時沛煊</strong>：數據處理、資料收集</li>
+                <li><strong>蔡沛真</strong>：決策樹訓練與圖表生成</li>
+                <li><strong>陳怡蓁</strong>：撰寫報告與統整結果</li>
+            </ul>
+        </section>
+        <section id="project-team">
+            <h2>專案團隊</h2>
+            <p>專案團隊負責整體規劃、技術實作與專案管理。</p>
+            <ul>
+                <li><strong>專案負責人</strong>：王大明</li>
+                <li><strong>技術專家</strong>：李小華</li>
+                <li><strong>資料分析師</strong>：張美玲</li>
+                <li><strong>視覺化設計師</strong>：陳真真</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Netflix Analysis Team. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
